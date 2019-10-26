@@ -8,6 +8,5 @@ function getRequests() {
 };
 
 var requests = getRequests();
-
-
-console.log(requests["carthtml"]); //logs t1
+// lol don't mind me
+document.getElementById("cartElement").innerHTML = decodeURIComponent(requests["carthtml"])
