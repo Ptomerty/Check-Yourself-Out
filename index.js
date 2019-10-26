@@ -60,7 +60,31 @@ function appendHiddenToForm(f, name, value) {
 document.getElementById("num-items").innerHTML = 5;
 document.getElementById("loaded-items").innerHTML = getItemString(1, "Salad", "Crisp Vegetables", 12) + getItemString(1, "Chicken", "Not Beef", 16) + getTotalString(20);
 
+function getCheckoutItemString(name, description, price) {
+	return `<li class="list-group-item d-flex justify-content-between lh-condensed">
+							<div>
+								<h6 class="my-0">${name}</h6>
+								<small class="text-muted">${description}</small>
+							</div>
+							<span class="text-muted">${price}</span>
+						</li>`;
+}
+
 function processForm(e) {
-	appendHiddenToForm(document.getElementById('selectForm'), 'cartHtml', 'abc');
+	numItems = "TODO";
+	checkoutItems = "TODO"; // getCheckoutItemString()
+	totalPrice = 20;
+	titleTemplate = `<h4 class="d-flex justify-content-between align-items-center mb-3">
+						<span class="text-muted">Your cart</span>
+						<span class="badge badge-secondary badge-pill">${numItems}</span>
+					</h4>`
+	prefix = '<ul class="list-group mb-3">'
+	totalPriceTemplate = `<li class="list-group-item d-flex justify-content-between">
+							<span>Total (USD)</span>
+							<strong>${totalPrice}</strong>
+						</li>`
+	postfix = '</ul>'
+	appended = titleTemplate + prefix + checkoutItems + totalPriceTemplate + postfix;
+	appendHiddenToForm(document.getElementById('selectForm'), 'carthtml', appended);
 }
 document.getElementById('selectForm').addEventListener("submit", processForm);
