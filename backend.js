@@ -1,8 +1,9 @@
 'use strict';
 require('dotenv').config();
 const fetch = require('node-fetch');
-var util = require('util');
-var exec = require('child_process').exec;
+const util = require('util');
+const exec = require('child_process').exec;
+const express = require('express');
 
 class OrderTemplate {
 	constructor(tableID, orderNum) {
@@ -36,14 +37,18 @@ class Table {
 		this.items = [];
 		this.orderNum = 0;
 		this.taxRate = taxRate;
+		this.token = "dummy";
 	}
 
-	async createAndSendOrder() {
+
+
+	async createAndSendOrder(orderArr) {
 		let order = new OrderTemplate(this.tableID, this.orderNum);
 		// console.log(this.items)
-		this.items.forEach((item) => {
+		orderArr.forEach((item) => {
+			this.addItem(item);
 			order.addItem(item, this.taxRate);
-		});
+		})
 		let check_only = true;
 		// let URL = `https://api-reg-apigee.ncrsilverlab.com/v2/orders?store_number=1&validate_only=${check_only}`;
 		// const params = {
@@ -92,7 +97,7 @@ class Table {
 		json = json['Result'];
 		this.items.push({
 			"ItemId": json['ItemVariations'][0]['ItemId'],
-			"Quantity": 1,
+			"Description": json['Description'],
 			"Name": json['Name'],
 			"UnitPrice": json['RetailPrice']
 		});
@@ -119,10 +124,33 @@ class Table {
 async function main() {
 	let table = new Table("1");
 	await table.generateToken();
-	console.log("token: " + table.token);
-	await table.addItem(1019923);
-	await table.createAndSendOrder();
-	// console.log(table.items)
+	let app = express();
+	app.use(express.urlencoded({extended: true}));
+	app.use(express.json());
+
+	app.get('/',(function(req,res){
+	    res.send(table.token);
+	}));
+
+	app.get('/items',(function(req,res){
+	    res.send(table.items);
+	}));
+
+	app.post('/pay',(function(req,res){
+	    let data = res.body.data; // b64 encoded
+	    let arr = JSON.parse(atob(data));
+	    table.createAndSendOrder(arr);
+	}));
+
+	app.listen(3000, () => console.log('Sample app listening on port 3000!'));
+
+	// console.log("token: " + table.token);
+	await table.addItem(1019960);
+	await table.addItem(1019961);
+	await table.addItem(1019962);
+	await table.addItem(1019963);
+	// await table.createAndSendOrder();
+	// // console.log(table.items)
 }
 
 main();
