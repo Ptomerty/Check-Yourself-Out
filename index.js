@@ -49,4 +49,18 @@ function getTotalString(total) {
 		</li>`;
 }
 
-document.getElementById("loaded-items").innerHTML = getItemString(1, "Salad", "Crisp Vegetables", 3) + getTotalString(20);
+function appendHiddenToForm(f, name, value) {
+	var input = document.createElement('input');
+	input.setAttribute('name', name);
+	input.setAttribute('value', value);
+	input.setAttribute('type', 'hidden');
+	f.appendChild(input);
+}
+
+document.getElementById("num-items").innerHTML = 5;
+document.getElementById("loaded-items").innerHTML = getItemString(1, "Salad", "Crisp Vegetables", 12) + getItemString(1, "Chicken", "Not Beef", 16) + getTotalString(20);
+
+function processForm(e) {
+	appendHiddenToForm(document.getElementById('selectForm'), 'cartHtml', 'abc');
+}
+document.getElementById('selectForm').addEventListener("submit", processForm);

@@ -28,16 +28,15 @@
 <body class="bg-light">
 	<div class="container">
 		<div class="py-5 text-center">
-			<img class="d-block mx-auto mb-4" src="assets/bootstrap-solid.svg" alt="" width="72" height="72">
 			<h2>Checkout form</h2>
-			<p class="lead">Below is an example form built entirely with Bootstrap’s form controls. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.</p>
+			<p class="lead">Select items to be paid for by one cards. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
 		</div>
 		<div class="row">
 			<!-- col-md-8 order-md-1 -->
-			<form class="col-12 order-0 mb-4" action="http://webhook.site/8c560010-fc6d-4207-aa7c-dd531007ed42" method="post">
+			<form id="selectForm" class="col-12 order-0 mb-4" action="http://webhook.site/8c560010-fc6d-4207-aa7c-dd531007ed42" method="post">
 				<h4 class="d-flex justify-content-between align-items-center mb-3">
 					<span>Unpaid Items</span>
-					<span class="badge badge-secondary badge-pill">3</span>
+					<span class="badge badge-secondary badge-pill" id="num-items">3</span>
 				</h4>
 				<ul id="loaded-items" class="list-group mb-3">
 					<label class="list-group-item list-group-item-action d-flex lh-condensed">
@@ -114,7 +113,7 @@
 					</div>
 				</div>
 				<hr class="mb-4">
-				<button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+				<button class="btn btn-primary btn-lg btn-block" type="submit" id="submitButton">Continue to checkout</button>
 			</form>
 		</div>
 
