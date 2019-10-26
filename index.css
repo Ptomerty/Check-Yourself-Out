@@ -1,0 +1,34 @@
+.container {
+  max-width: 960px;
+}
+
+.lh-condensed { line-height: 1.25; }
+
+.big-checkbox {
+	width: 30px;
+	height: 30px;
+	margin: auto;
+}
+
+.fancy-radio > input {
+	/*width: 0;
+	height: 0;
+	display: none;*/
+}
+
+.hack {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	visibility: hidden;
+}
+
+.fancy-radio > input:checked + .hack {
+	visibility: visible;
+}
+
+.hack + span {
+	z-index: 2;
+}
