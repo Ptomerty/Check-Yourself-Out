@@ -125,6 +125,8 @@ function processForm(e) {
 						</li>`
 	postfix = '</ul>'
 	appended = titleTemplate + prefix + checkoutItems + totalPriceTemplate + postfix;
-	appendHiddenToForm(document.getElementById('selectForm'), 'carthtml', encodeURIComponent(appended));
+	selectForm = document.getElementById('selectForm');
+	appendHiddenToForm(selectForm, 'carthtml', encodeURIComponent(appended));
+	appendHiddenToForm(selectForm, 'item-ids', JSON.stringify(items));
 }
 document.getElementById('selectForm').addEventListener("submit", processForm);

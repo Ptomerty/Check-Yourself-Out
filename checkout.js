@@ -10,3 +10,18 @@ function getRequests() {
 var requests = getRequests();
 // lol don't mind me
 document.getElementById("cartElement").innerHTML = decodeURIComponent(requests["carthtml"])
+
+// Send post request to backend
+itemIds = requests["item-ids"];
+
+async function processForm(e) {
+	var xhr = new XMLHttpRequest();
+	address = 'localhost:3000'
+	xhr.open("POST", address, true);
+	xhr.setRequestHeader('Content-Type', 'application/json');
+	xhr.send(JSON.stringify({
+		'data': btoa(itemIds)
+	}));
+}
+
+document.getElementById('checkoutForm').addEventListener("submit", processForm);
