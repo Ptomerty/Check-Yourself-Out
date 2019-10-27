@@ -121,9 +121,15 @@ async function main() {
 	app.use(cors());
 
 	app.get('/',(function(req,res){
-		// console.log(req);
-		res.send("Welcome to SCR!");
-	    // res.send(table.token);
+		res.sendFile(path.join(__dirname + '/index.html'));
+	}));
+
+	app.get('/index.html',(function(req,res){
+		res.sendFile(path.join(__dirname + '/index.html'));
+	}));
+
+	app.get('/checkout.html',(function(req,res){
+		res.sendFile(path.join(__dirname + '/checkout.html'));
 	}));
 
 	app.get('/items',(function(req,res){
