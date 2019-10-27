@@ -14,6 +14,14 @@ document.getElementById("cartElement").innerHTML = decodeURIComponent(requests["
 // Send post request to backend
 itemIds = requests["item-ids"];
 
+function appendHiddenToForm(f, name, value) {
+	var input = document.createElement('input');
+	input.setAttribute('name', name);
+	input.setAttribute('value', value);
+	input.setAttribute('type', 'hidden');
+	f.appendChild(input);
+}
+
 async function processForm(e) {
 	var xhr = new XMLHttpRequest();
 	address = 'http://checkyourselfout.online:3000/pay/' + requests['table'];
@@ -25,5 +33,7 @@ async function processForm(e) {
 	alert("Payment successful!");
 }
 
-document.getElementById('checkoutForm').setAttribute("action", "index.html?table=" + requests['table']);
-document.getElementById('checkoutForm').addEventListener("submit", processForm);
+var checkoutForm = document.getElementById('checkoutForm');
+checkoutForm.setAttribute("action", "index.html");
+appendHiddenToForm(checkoutForm, "table", requests['table']);
+checkoutForm.addEventListener("submit", processForm); 
