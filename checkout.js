@@ -16,12 +16,13 @@ itemIds = requests["item-ids"];
 
 async function processForm(e) {
 	var xhr = new XMLHttpRequest();
-	address = 'localhost:3000/pay'
+	address = 'http://localhost:3000/pay'
 	xhr.open("POST", address, true);
 	xhr.setRequestHeader('Content-Type', 'application/json');
 	xhr.send(JSON.stringify({
 		'data': btoa(itemIds)
 	}));
+	alert("Payment successful!");
 }
 
 document.getElementById('checkoutForm').addEventListener("submit", processForm);

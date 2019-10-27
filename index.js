@@ -79,7 +79,8 @@ function httpGetAsync(theUrl, callback) {
 // Dummy
 document.getElementById("loaded-items").innerHTML = getItemString(1, "Salad", "Crisp Vegetables", 12) + getItemString(1, "Chicken", "Not Beef", 16) + getTotalString(20);
 
-items = httpGetAsync('localhost:3000/items', text => {
+items = httpGetAsync('http://localhost:3000/items', text => {
+	console.log(text);
 	items = JSON.parse(text);
 	document.getElementById("num-items").innerHTML = items.length; // Number of items
 	

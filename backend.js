@@ -43,12 +43,15 @@ class Table {
 
 	async createAndSendOrder(orderArr) {
 		let order = new OrderTemplate(this.tableID, this.orderNum);
+		console.log(this.items);
+		console.log(orderArr);
 		for (var item of this.items) {
 			if (orderArr.includes(item['ItemId'])) {
 				order.addItem(item, this.taxRate);
 				this.items.splice(this.items.indexOf(item), 1);
 			}
 		}
+		console.log(order);
 		let check_only = true;
 
 		// so the API wouldn't let us pass in the object itself through js
@@ -58,9 +61,12 @@ class Table {
 		-d '{ "Orders": [${JSON.stringify(order).replace(/\'/g, "\"")}], "SourceApplicationName": "SCR"}' \\
 		'https://api-reg-apigee.ncrsilverlab.com/v2/orders?store_number=1&validate_only=${check_only}'`;
 		// console.log("working string:" + JSON.stringify(order).replace(/\'/g, "\""));
+		console.log(curl);
 		let child = exec(curl, (e, o, err) => {
 			console.log(o);
 		});
+		// this.items = [];
+		console.log(this.items);
 	}
 
 	async addItem(itemID) {
@@ -110,6 +116,7 @@ async function main() {
 	app.use(cors());
 
 	app.get('/',(function(req,res){
+		console.log(req);
 	    res.send(table.token);
 	}));
 
