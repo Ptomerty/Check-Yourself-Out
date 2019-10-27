@@ -64,20 +64,35 @@ function appendHiddenToForm(f, name, value) {
 	f.appendChild(input);
 }
 
-items = JSON.parse('[{"ItemId":1711709,"Description":"Very yummy! Also not pork.","Name":"Chicken Sandwich","UnitPrice":7.5}]');
+function httpGetAsync(theUrl, callback) {
+	var xmlHttp = new XMLHttpRequest();
+	xmlHttp.onreadystatechange = function() {
+		console.log("GET request: " + xmlHttp.readyState + " - " + xmlHttp.status);
+		if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+			callback(xmlHttp.responseText);
+		}
+	}
+	xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+	xmlHttp.send(null);
+}
 
-document.getElementById("num-items").innerHTML = items.length; // Number of items
+// Dummy
+document.getElementById("loaded-items").innerHTML = getItemString(1, "Salad", "Crisp Vegetables", 12) + getItemString(1, "Chicken", "Not Beef", 16) + getTotalString(20);
 
-totalItemString = "";
-totalPrice = 0;
-items.forEach(item => {
-	totalItemString += getItemString("item-" + item.ItemId, item.Name, item.Description, item.UnitPrice);
-	totalPrice += item.UnitPrice;
+items = httpGetAsync('localhost:3000/items', text => {
+	items = JSON.parse(text);
+	document.getElementById("num-items").innerHTML = items.length; // Number of items
+	
+	totalItemString = "";
+	totalPrice = 0;
+	items.forEach(item => {
+		totalItemString += getItemString("item-" + item.ItemId, item.Name, item.Description, item.UnitPrice);
+		totalPrice += item.UnitPrice;
+	});
+
+	document.getElementById("loaded-items").innerHTML = totalItemString + getTotalString(totalPrice);
 });
-
-document.getElementById("loaded-items").innerHTML = totalItemString + getTotalString(totalPrice);
-
-//document.getElementById("loaded-items").innerHTML = getItemString(1, "Salad", "Crisp Vegetables", 12) + getItemString(1, "Chicken", "Not Beef", 16) + getTotalString(20);
+//items = JSON.parse('[{"ItemId":1711709,"Description":"Very yummy! Also not pork.","Name":"Chicken Sandwich","UnitPrice":7.5}]');
 
 function getCheckoutItemString(name, description, price) {
 	return `<li class="list-group-item d-flex justify-content-between lh-condensed">

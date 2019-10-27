@@ -16,7 +16,7 @@ itemIds = requests["item-ids"];
 
 async function processForm(e) {
 	var xhr = new XMLHttpRequest();
-	address = 'localhost:3000'
+	address = 'localhost:3000/pay'
 	xhr.open("POST", address, true);
 	xhr.setRequestHeader('Content-Type', 'application/json');
 	xhr.send(JSON.stringify({
