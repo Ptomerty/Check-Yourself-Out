@@ -121,9 +121,15 @@ async function main() {
 	app.use(express.urlencoded({extended: true}));
 	app.use(express.json());
 	app.use(cors());
+	app.use(function(req, res, next) {
+	  res.header("Access-Control-Allow-Origin", "*");
+	  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content$
+	  next();
+	});
+
 
 	app.get('/',(function(req,res){
-		res.sendFile('index.html');
+		res.redirect('/index.html');
 	}));
 
 	app.get('/index.html',(function(req,res){
