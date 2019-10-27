@@ -79,8 +79,22 @@ function httpGetAsync(theUrl, callback) {
 // Dummy
 document.getElementById("loaded-items").innerHTML = getItemString(1, "Salad", "Crisp Vegetables", 12) + getItemString(1, "Chicken", "Not Beef", 16) + getTotalString(20);
 
-items = httpGetAsync('http://localhost:3000/items', text => {
-	console.log(text);
+function getRequests() {
+	var s1 = location.search.substring(1, location.search.length).split('&'), r = {}, s2, i;
+	for (i = 0; i < s1.length; i += 1) {
+		s2 = s1[i].split('=');
+		r[decodeURIComponent(s2[0]).toLowerCase()] = decodeURIComponent(s2[1]);
+	}
+	return r;
+};
+
+var requests = getRequests();
+
+if (requests['table'] === undefined) {
+	requests['table'] = '1';
+}
+
+items = httpGetAsync('http://localhost:3000/items/' + requests['table'], text => {
 	items = JSON.parse(text);
 	document.getElementById("num-items").innerHTML = items.length; // Number of items
 	
