@@ -117,20 +117,21 @@ async function main() {
 	}
 	
 	let app = express();
+	app.use(express.static('.'));
 	app.use(express.urlencoded({extended: true}));
 	app.use(express.json());
 	app.use(cors());
 
 	app.get('/',(function(req,res){
-		res.sendFile(path.join(__dirname + '/index.html'));
+		res.sendFile('index.html');
 	}));
 
 	app.get('/index.html',(function(req,res){
-		res.sendFile(path.join(__dirname + '/index.html'));
+		res.sendFile('index.html');
 	}));
 
 	app.get('/checkout.html',(function(req,res){
-		res.sendFile(path.join(__dirname + '/checkout.html'));
+		res.sendFile('checkout.html');
 	}));
 
 	app.get('/items',(function(req,res){
