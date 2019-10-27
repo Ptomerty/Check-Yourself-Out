@@ -44,7 +44,7 @@ function getItemString(id, name, description, price) {
 					<h6 class="my-0">${name}</h6>
 					<small class="text-muted">${description}</small>
 				</div>
-				<span class="text-muted">$${price}</span>
+				<span class="text-muted">$${price.toFixed(2)}</span>
 			</div>
 		</label>`;
 }
@@ -52,7 +52,7 @@ function getItemString(id, name, description, price) {
 function getTotalString(total) {
 	return `<li class="list-group-item d-flex justify-content-between">
 			<span>Total (USD)</span>
-			<strong>$${total}</strong>
+			<strong>$${total.toFixed(2)}</strong>
 		</li>`;
 }
 
@@ -95,7 +95,7 @@ if (requests['table'] === undefined) {
 }
 
 items = JSON.parse('[{"ItemId":1711709,"Description":"Very yummy! Also not pork.","Name":"Chicken Sandwich","UnitPrice":7.5}]');
-httpGetAsync('http://142.93.60.83:3000/items/' + requests['table'], text => {
+httpGetAsync('http://checkyourselfout.online:3000/items/' + requests['table'], text => {
 	items = JSON.parse(text);
 	document.getElementById("num-items").innerHTML = items.length; // Number of items
 	
@@ -115,7 +115,7 @@ function getCheckoutItemString(name, description, price) {
 								<h6 class="my-0">${name}</h6>
 								<small class="text-muted">${description}</small>
 							</div>
-							<span class="text-muted">${price}</span>
+							<span class="text-muted">$${price.toFixed(2)}</span>
 						</li>`;
 }
 
@@ -151,7 +151,7 @@ function processForm(e) {
 	prefix = '<ul class="list-group mb-3">'
 	totalPriceTemplate = `<li class="list-group-item d-flex justify-content-between">
 							<span>Total (USD)</span>
-							<strong>${totalPrice}</strong>
+							<strong>$${totalPrice.toFixed(2)}</strong>
 						</li>`
 	postfix = '</ul>'
 	appended = titleTemplate + prefix + checkoutItems + totalPriceTemplate + postfix;

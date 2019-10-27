@@ -16,7 +16,7 @@ itemIds = requests["item-ids"];
 
 async function processForm(e) {
 	var xhr = new XMLHttpRequest();
-	address = 'http://142.93.60.83:3000/pay/' + requests['table'];
+	address = 'http://checkyourselfout.online:3000/pay/' + requests['table'];
 	xhr.open("POST", address, true);
 	xhr.setRequestHeader('Content-Type', 'application/json');
 	xhr.send(JSON.stringify({
