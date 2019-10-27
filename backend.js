@@ -108,20 +108,30 @@ class Table {
 }
 
 async function main() {
+	let tableArr = []
 	let table = new Table("1");
 	await table.generateToken();
+	let table2 = new Table("2");
+	await table2.generateToken();
+	tableArr.push(table);
+	tableArr.push(table2);
 	let app = express();
 	app.use(express.urlencoded({extended: true}));
 	app.use(express.json());
 	app.use(cors());
 
 	app.get('/',(function(req,res){
-		console.log(req);
+		// console.log(req);
 	    res.send(table.token);
 	}));
 
 	app.get('/items',(function(req,res){
 	    res.send(table.items);
+	}));
+
+	app.get('/items/:tableNum',(function(req,res){
+		console.log(req.params.tableNum);
+	    res.send(tableArr[req.params.tableNum - 1].items);
 	}));
 
 	app.post('/pay',(function(req,res){
@@ -130,11 +140,25 @@ async function main() {
 	    table.createAndSendOrder(arr);
 	}));
 
+	app.post('/pay/:tableNum',(function(req,res){
+	    let data = req.body.data; // b64 encoded
+	    let arr = JSON.parse(atob(data));
+	    tableArr[req.params.tableNum - 1].createAndSendOrder(arr);
+	}));
+
 	app.post('/add',( async function(req,res){
 	    let data = req.body.data; // b64 encoded
 	    let arr = JSON.parse(atob(data));
 	    for (var item of arr) {
 			await table.addItem(item);
+		}
+	}));
+
+	app.post('/add/:tableNum',( async function(req,res){
+	    let data = req.body.data; // b64 encoded
+	    let arr = JSON.parse(atob(data));
+	    for (var item of arr) {
+			await tableArr[req.params.tableNum - 1].addItem(item);
 		}
 	}));
 
