@@ -25,4 +25,5 @@ async function processForm(e) {
 	alert("Payment successful!");
 }
 
+document.getElementById('checkoutForm').setAttribute("action", "index.html?table=" + requests['table']);
 document.getElementById('checkoutForm').addEventListener("submit", processForm);
