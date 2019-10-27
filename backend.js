@@ -7,6 +7,7 @@ const express = require('express');
 const atob = require('atob');
 const btoa = require('btoa');
 const cors = require('cors');
+const path = require('path');
 
 class OrderTemplate {
 	constructor(tableID, orderNum) {
@@ -168,7 +169,7 @@ async function main() {
 		}
 	}));
 
-	app.listen(3000, () => console.log('SCR listening on port 3000!'));
+	app.listen(3000, "0.0.0.0", () => console.log('SCR listening on port 3000!'));
 
 }
 
