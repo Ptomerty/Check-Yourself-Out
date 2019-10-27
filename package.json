@@ -18,6 +18,8 @@
   "homepage": "https://github.com/Ptomerty/hackgt-6#readme",
   "dependencies": {
     "atob": "^2.1.2",
+    "btoa": "^1.2.1",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "node-fetch": "^2.6.0"

@@ -4,6 +4,9 @@ const fetch = require('node-fetch');
 const util = require('util');
 const exec = require('child_process').exec;
 const express = require('express');
+const atob = require('atob');
+const btoa = require('btoa');
+const cors = require('cors');
 
 class OrderTemplate {
 	constructor(tableID, orderNum) {
@@ -24,9 +27,7 @@ class OrderTemplate {
 
 	addItem(itemObj, tax = 0.00) {
 		this.LineItems.push(itemObj);
-		// console.log(typeof itemObj['UnitPrice'])
 		this.TaxAmount += itemObj['UnitPrice'] * tax;
-		//query for item ID
 	}
 
 }
@@ -40,51 +41,30 @@ class Table {
 		this.token = "dummy";
 	}
 
-
-
 	async createAndSendOrder(orderArr) {
 		let order = new OrderTemplate(this.tableID, this.orderNum);
-		// console.log(this.items)
-		orderArr.forEach((item) => {
-			this.addItem(item);
-			order.addItem(item, this.taxRate);
-		})
+		for (var item of this.items) {
+			if (orderArr.includes(item['ItemId'])) {
+				order.addItem(item, this.taxRate);
+				this.items.splice(this.items.indexOf(item), 1);
+			}
+		}
 		let check_only = true;
-		// let URL = `https://api-reg-apigee.ncrsilverlab.com/v2/orders?store_number=1&validate_only=${check_only}`;
-		// const params = {
-		// 	method: 'POST',
-		// 	headers: {
-		// 		"Content-Type": "application/json",
-		// 		"Accept": "application/json",
-		// 		"authorization": "Bearer " + this.token
-		// 	},
-		// 	body: {
-		// 		"Orders": [JSON.parse(JSON.stringify(order).replace(/\'/g, "\""))],
-		// 		// "Orders": [order],
-		// 		"SourceApplicationName": "SCR"
-		// 		// "Orders" : []
-		// 	}
-		// }
 
-		// so the API wouldn't let us pass in the object itself
-		// give it a try and let me know if you can fix it
+		// so the API wouldn't let us pass in the object itself through js
 		let curl = `curl -X POST --header 'Content-Type: application/json' \\
 		--header 'Accept: application/json' \\
 		--header 'authorization: Bearer ${this.token}' \\
 		-d '{ "Orders": [${JSON.stringify(order).replace(/\'/g, "\"")}], "SourceApplicationName": "SCR"}' \\
 		'https://api-reg-apigee.ncrsilverlab.com/v2/orders?store_number=1&validate_only=${check_only}'`;
 		// console.log("working string:" + JSON.stringify(order).replace(/\'/g, "\""));
-		console.log(curl);
 		let child = exec(curl, (e, o, err) => {
-			console.log("stdout:" + o);
+			console.log(o);
 		});
 	}
 
 	async addItem(itemID) {
-		let date = new Date();
-		if (date >= this.expDate) {
-			await generateToken();
-		}
+		await this.generateToken(); // be safe
 		let URL = `https://api-reg-apigee.ncrsilverlab.com/v2/inventory/items/item?item_master_id=${itemID}`
 		const params = {
 			headers: {
@@ -99,7 +79,8 @@ class Table {
 			"ItemId": json['ItemVariations'][0]['ItemId'],
 			"Description": json['Description'],
 			"Name": json['Name'],
-			"UnitPrice": json['RetailPrice']
+			"UnitPrice": json['RetailPrice'],
+			"Quantity": 1
 		});
 	}
 
@@ -117,7 +98,6 @@ class Table {
 		let data = await fetch(URL, params);
 		let json = await data.json();
 		this.token = json['Result']['AccessToken'];
-		this.expDate = json['Result']['AccessTokenExpirationUtc'];
 	}
 }
 
@@ -127,6 +107,7 @@ async function main() {
 	let app = express();
 	app.use(express.urlencoded({extended: true}));
 	app.use(express.json());
+	app.use(cors());
 
 	app.get('/',(function(req,res){
 	    res.send(table.token);
@@ -137,20 +118,21 @@ async function main() {
 	}));
 
 	app.post('/pay',(function(req,res){
-	    let data = res.body.data; // b64 encoded
+	    let data = req.body.data; // b64 encoded
 	    let arr = JSON.parse(atob(data));
 	    table.createAndSendOrder(arr);
 	}));
 
-	app.listen(3000, () => console.log('Sample app listening on port 3000!'));
+	app.post('/add',( async function(req,res){
+	    let data = req.body.data; // b64 encoded
+	    let arr = JSON.parse(atob(data));
+	    for (var item of arr) {
+			await table.addItem(item);
+		}
+	}));
 
-	// console.log("token: " + table.token);
-	await table.addItem(1019960);
-	await table.addItem(1019961);
-	await table.addItem(1019962);
-	await table.addItem(1019963);
-	// await table.createAndSendOrder();
-	// // console.log(table.items)
+	app.listen(3000, () => console.log('SCR listening on port 3000!'));
+
 }
 
 main();
