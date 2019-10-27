@@ -95,7 +95,7 @@ if (requests['table'] === undefined) {
 }
 
 items = JSON.parse('[{"ItemId":1711709,"Description":"Very yummy! Also not pork.","Name":"Chicken Sandwich","UnitPrice":7.5}]');
-httpGetAsync('http://localhost:3000/items/' + requests['table'], text => {
+httpGetAsync('http://142.93.60.83:3000/items/' + requests['table'], text => {
 	items = JSON.parse(text);
 	document.getElementById("num-items").innerHTML = items.length; // Number of items
 	

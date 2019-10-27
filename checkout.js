@@ -14,17 +14,9 @@ document.getElementById("cartElement").innerHTML = decodeURIComponent(requests["
 // Send post request to backend
 itemIds = requests["item-ids"];
 
-function appendHiddenToForm(f, name, value) {
-	var input = document.createElement('input');
-	input.setAttribute('name', name);
-	input.setAttribute('value', value);
-	input.setAttribute('type', 'hidden');
-	f.appendChild(input);
-}
-
 async function processForm(e) {
 	var xhr = new XMLHttpRequest();
-	address = 'http://localhost:3000/pay/' + requests['table'];
+	address = 'http://142.93.60.83:3000/pay/' + requests['table'];
 	xhr.open("POST", address, true);
 	xhr.setRequestHeader('Content-Type', 'application/json');
 	xhr.send(JSON.stringify({
@@ -33,7 +25,5 @@ async function processForm(e) {
 	alert("Payment successful!");
 }
 
-var checkoutForm = document.getElementById('checkoutForm');
-checkoutForm.setAttribute("action", "index.html");
-appendHiddenToForm(checkoutForm, "table", requests['table']);
-checkoutForm.addEventListener("submit", processForm);
+document.getElementById('checkoutForm').setAttribute("action", "index.html?table=" + requests['table']);
+document.getElementById('checkoutForm').addEventListener("submit", processForm);
