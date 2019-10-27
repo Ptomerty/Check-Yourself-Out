@@ -16,6 +16,13 @@ function applyToRadioButtons(func) {
 	}
 }
 
+function applyToItemCheckboxes(func) {
+	var checkboxes = document.getElementsByClassName("big-checkbox");
+	for (let x of checkboxes) {
+		func(x);
+	}
+}
+
 function onRadio() {
 	applyToRadioButtons(x => {
 		if (x.checked) {
@@ -57,8 +64,20 @@ function appendHiddenToForm(f, name, value) {
 	f.appendChild(input);
 }
 
-document.getElementById("num-items").innerHTML = 5;
-document.getElementById("loaded-items").innerHTML = getItemString(1, "Salad", "Crisp Vegetables", 12) + getItemString(1, "Chicken", "Not Beef", 16) + getTotalString(20);
+items = JSON.parse('[{"ItemId":1711709,"Description":"Very yummy! Also not pork.","Name":"Chicken Sandwich","UnitPrice":7.5}]');
+
+document.getElementById("num-items").innerHTML = items.length; // Number of items
+
+totalItemString = "";
+totalPrice = 0;
+items.forEach(item => {
+	totalItemString += getItemString("item-" + item.ItemId, item.Name, item.Description, item.UnitPrice);
+	totalPrice += item.UnitPrice;
+});
+
+document.getElementById("loaded-items").innerHTML = totalItemString + getTotalString(totalPrice);
+
+//document.getElementById("loaded-items").innerHTML = getItemString(1, "Salad", "Crisp Vegetables", 12) + getItemString(1, "Chicken", "Not Beef", 16) + getTotalString(20);
 
 function getCheckoutItemString(name, description, price) {
 	return `<li class="list-group-item d-flex justify-content-between lh-condensed">
@@ -71,9 +90,30 @@ function getCheckoutItemString(name, description, price) {
 }
 
 function processForm(e) {
-	numItems = "TODO";
-	checkoutItems = "TODO"; // getCheckoutItemString()
-	totalPrice = 20;
+	jsonItems = items;
+	items = [];
+	applyToItemCheckboxes(itemCheckbox => {
+		if (itemCheckbox.checked) {
+			items.push(parseInt(itemCheckbox.name.substring("item-".length)));
+		}
+	});
+	numItems = items.length;
+	checkoutItems = "";
+	totalPrice = 0;
+	items.forEach(item => {
+		name = "Error";
+		description = "Error";
+		price = "Error";
+		jsonItems.forEach(x => {
+			if (x.ItemId === item) {
+				name = x.Name;
+				description = x.Description;
+				price = x.UnitPrice;
+			}
+		});
+		checkoutItems += getCheckoutItemString(name, description, price);
+		totalPrice += price;
+	});
 	titleTemplate = `<h4 class="d-flex justify-content-between align-items-center mb-3">
 						<span class="text-muted">Your cart</span>
 						<span class="badge badge-secondary badge-pill">${numItems}</span>
