@@ -94,7 +94,8 @@ if (requests['table'] === undefined) {
 	requests['table'] = '1';
 }
 
-items = httpGetAsync('http://localhost:3000/items/' + requests['table'], text => {
+items = JSON.parse('[{"ItemId":1711709,"Description":"Very yummy! Also not pork.","Name":"Chicken Sandwich","UnitPrice":7.5}]');
+httpGetAsync('http://localhost:3000/items/' + requests['table'], text => {
 	items = JSON.parse(text);
 	document.getElementById("num-items").innerHTML = items.length; // Number of items
 	
@@ -107,7 +108,6 @@ items = httpGetAsync('http://localhost:3000/items/' + requests['table'], text =>
 
 	document.getElementById("loaded-items").innerHTML = totalItemString + getTotalString(totalPrice);
 });
-//items = JSON.parse('[{"ItemId":1711709,"Description":"Very yummy! Also not pork.","Name":"Chicken Sandwich","UnitPrice":7.5}]');
 
 function getCheckoutItemString(name, description, price) {
 	return `<li class="list-group-item d-flex justify-content-between lh-condensed">
@@ -158,5 +158,6 @@ function processForm(e) {
 	selectForm = document.getElementById('selectForm');
 	appendHiddenToForm(selectForm, 'carthtml', encodeURIComponent(appended));
 	appendHiddenToForm(selectForm, 'item-ids', JSON.stringify(items));
+	appendHiddenToForm(selectForm, 'table', requests['table']);
 }
 document.getElementById('selectForm').addEventListener("submit", processForm);
